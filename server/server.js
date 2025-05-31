@@ -13,7 +13,7 @@ app.use(express.json());
 
 
 const allowedOrigins = [
-  'https://student-result-analysis-portal.vercel.app',
+  'https://student-result-analysis-portal.vercel.app/api',
   'http://localhost:5173',
 ];
 
