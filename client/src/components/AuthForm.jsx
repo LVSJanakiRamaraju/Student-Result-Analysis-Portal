@@ -48,7 +48,7 @@ const AuthForm = () => {
         else navigate('/faculty-dashboard');
       
     } catch (err) {
-      alert(err.response?.data?.message || 'Something went wrong.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
