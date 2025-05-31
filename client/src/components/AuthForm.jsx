@@ -29,7 +29,7 @@ const AuthForm = () => {
   const handleSubmit = async (type) => {
     if (!validateForm()) return;
 
-    const VITE_API = import.meta.env.VITE_API || 'http://localhost:5000/api';
+    const VITE_API = import.meta.env.VITE_API;
     setLoading(true);
 
     try {
