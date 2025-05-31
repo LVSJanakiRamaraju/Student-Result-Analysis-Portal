@@ -14,11 +14,13 @@ const PerformanceChart = ({ userId }) => {
     { name: 'Fail', value: 0 },
   ]);
 
+  const VITE_API = import.meta.env.VITE_API || 'http://localhost:5000/api';
+
 useEffect(() => {
   const fetchData = async () => {
     try {
       console.log(userId);
-      const res = await axios.get(`http://localhost:5000/api/performance/${userId}`);
+      const res = await axios.get(`${VITE_API}/performance/${userId}`);
       const data = res.data;
 
       const lineDataFormatted = data.semesters.map((sem, idx) => ({

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const csv = require('csvtojson');
 require('dotenv').config();
 
-const uri = process.env.MONGO_URI; // In your .env file
+const uri = process.env.MONGO_URI;
 
 const performanceSchema = new mongoose.Schema({
   ID: String,
@@ -22,7 +22,6 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(async () => {
     console.log('Connected to MongoDB Atlas');
 
-    // Convert CSV to JSON
     const jsonArray = await csv().fromFile('./csm.csv');
 
     const formattedData = jsonArray.map((row) => {
@@ -44,7 +43,6 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       };
     });
 
-    // Insert into MongoDB
     await Performance.insertMany(formattedData);
     console.log('Data inserted!');
     process.exit(0);

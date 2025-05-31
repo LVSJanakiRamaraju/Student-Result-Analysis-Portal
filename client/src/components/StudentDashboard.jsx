@@ -24,10 +24,13 @@ const StudentDashboard = () => {
   const [compareId, setCompareId] = useState('');
   const [compareData, setCompareData] = useState(null);
 
+  const VITE_API = import.meta.env.VITE_API || 'http://localhost:5000/api';
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/performance/${userId}`);
+        
+        const res = await axios.get(`${VITE_API}/performance/${userId}`);
         const data = res.data;
         setSemesters(data.semesters);
 
@@ -46,7 +49,7 @@ const StudentDashboard = () => {
   const handleCompare = async () => {
     if (!compareId) return;
     try {
-      const res = await axios.get(`http://localhost:5000/api/performance/${compareId}`);
+      const res = await axios.get(`${VITE_API}/performance/${compareId}`);
       setCompareData(res.data);
     } catch (err) {
       console.error(err);

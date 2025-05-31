@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Performance = require('../models/Performance'); // Adjust path!
+const Performance = require('../models/Performance');
 
-// GET performance data by user ID
 router.get('/:id', async (req, res) => {
   try {
     const data = await Performance.findOne({ ID: req.params.id });

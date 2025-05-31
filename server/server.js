@@ -8,15 +8,30 @@ const performanceRoutes = require('./routes/performance');
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
+
+
+const allowedOrigins = [
+  'https://student-result-analysis-portal.vercel.app',
+  'http://localhost:5173',
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/performance', performanceRoutes);
 
-// MongoDB Connection & Server Start
 const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {

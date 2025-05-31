@@ -29,12 +29,12 @@ const AuthForm = () => {
   const handleSubmit = async (type) => {
     if (!validateForm()) return;
 
-    const API = import.meta.env.VITE_API || 'http://localhost:5000/api';
+    const VITE_API = import.meta.env.VITE_API || 'http://localhost:5000/api';
     setLoading(true);
 
     try {
       const endpoint = type === 'login' ? 'login' : 'signup';
-      const res = await axios.post(`${API}/auth/${endpoint}`, { ...form, role });
+      const res = await axios.post(`${VITE_API}/auth/${endpoint}`, { ...form, role });
 
       
         localStorage.setItem('token', res.data.token);
