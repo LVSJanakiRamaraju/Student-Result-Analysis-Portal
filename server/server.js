@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
+const performanceRoutes = require('./routes/performance');
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/performance', performanceRoutes);
 
 // MongoDB Connection & Server Start
 const startServer = async () => {

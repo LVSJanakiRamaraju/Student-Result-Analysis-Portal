@@ -41,7 +41,10 @@ const AuthForm = () => {
         localStorage.setItem('role', res.data.user.role);
         localStorage.setItem('name', res.data.user.name);
 
-        if (res.data.user.role === 'student') navigate('/student-dashboard');
+        if (res.data.user.role === 'student'){
+          localStorage.setItem('userId', res.data.user.rollNo);
+          navigate('/student-dashboard');
+        }
         else navigate('/faculty-dashboard');
       
     } catch (err) {
