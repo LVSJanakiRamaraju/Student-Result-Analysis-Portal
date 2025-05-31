@@ -13,7 +13,7 @@ app.use(express.json());
 
 
 const allowedOrigins = [
-  'https://student-result-analysis-portal.vercel.app/api',
+  'https://student-result-analysis-portal.vercel.app',
   'http://localhost:5173',
 ];
 
@@ -29,8 +29,8 @@ app.use(cors({
 }));
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/performance', performanceRoutes);
+app.use('/auth', authRoutes);
+app.use('/performance', performanceRoutes);
 
 const startServer = async () => {
   try {
