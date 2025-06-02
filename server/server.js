@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
 const performanceRoutes = require('./routes/performance');
+const facultyRoutes = require('./routes/Faculty'); 
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(cors({
 // Routes
 app.use('/auth', authRoutes);
 app.use('/performance', performanceRoutes);
+app.use('/faculty', facultyRoutes);
 
 const startServer = async () => {
   try {
