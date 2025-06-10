@@ -16,6 +16,8 @@ import {
 
 const StudentDashboard = () => {
   const userId = localStorage.getItem('userId');
+  const userName = localStorage.getItem('name');
+
   const [semesters, setSemesters] = useState([]);
   const [highestSGPA, setHighestSGPA] = useState(0);
   const [lowestSGPA, setLowestSGPA] = useState(0);
@@ -28,8 +30,8 @@ const StudentDashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!userId) return; 
       try {
-        
         const res = await axios.get(`${VITE_API}/performance/${userId}`);
         const data = res.data;
         setSemesters(data.semesters);
@@ -67,10 +69,31 @@ const StudentDashboard = () => {
     }));
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload(); 
+  };
+
+  if (!userId) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <h2 className="text-xl font-semibold text-red-600">Please log in to access the dashboard.</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="flex">
       <div className="flex-1 bg-gray-100 p-6 min-h-screen">
-        <h1 className="text-2xl font-bold mb-4">{userId} Dashboard</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold text-purple-700">{userName}'s Dashboard</h1>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+          >
+            Logout
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <ChartCard title="Highest SGPA">{highestSGPA} SGPA</ChartCard>
@@ -109,7 +132,7 @@ const StudentDashboard = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis domain={['dataMin - 1', 'dataMax + 1']}
-                  tickFormatter={(value) => value.toFixed(2)} />
+                    tickFormatter={(value) => value.toFixed(2)} />
                   <Tooltip />
                   <Legend />
                   <Line type="monotone" dataKey="yourSGPA" stroke="#3b82f6" strokeWidth={2} name="Your SGPA" />
@@ -119,7 +142,6 @@ const StudentDashboard = () => {
                 </LineChart>
               </ResponsiveContainer>
 
-              {/* Backlogs Comparison */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
                   <h4 className="font-semibold text-blue-600 mb-2">Your Backlogs</h4>

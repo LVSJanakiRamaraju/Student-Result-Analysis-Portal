@@ -16,7 +16,7 @@ const facultyData = [
       { name: "AI(CSM)", class: "CSM-C", year: "II/IV", semester: "II" }
     ],
     classTeacherOf: ["CSM-A"],
-    courseCoordinatorOf: ["CSM"]
+    courseCoordinatorOf: ["AI(CSM)/ BODS(CSD)"]
   },
   {
     name: "Ms.Y.Sruthi",

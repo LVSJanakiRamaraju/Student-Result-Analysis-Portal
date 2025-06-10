@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {React, useEffect} from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Home from './components/Home';
 import AuthForm from './components/AuthForm';
 import Login from './components/Login';
@@ -7,7 +7,7 @@ import StudentDashboard from './components/StudentDashboard';
 import FacultyDashboard from './components/FacultyDashboard';
 
 function App() {
-  const isAuthenticated = !!localStorage.getItem('token');
+  const isAuthenticated = localStorage.getItem('token');
   const role = localStorage.getItem('role');
 
   return (
@@ -25,7 +25,7 @@ function App() {
                 isAuthenticated && role === 'student' ? (
                   <StudentDashboard />
                 ) : (
-                  <Navigate to="/login" />
+                  <Navigate to="/auth" />
                 )
               }
             />
@@ -36,7 +36,7 @@ function App() {
                 isAuthenticated && role === 'faculty' ? (
                   <FacultyDashboard />
                 ) : (
-                  <Navigate to="/login" />
+                  <Navigate to="/auth" />
                 )
               }
             />

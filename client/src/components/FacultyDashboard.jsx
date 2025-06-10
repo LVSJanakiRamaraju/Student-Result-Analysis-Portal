@@ -12,7 +12,9 @@ import {
 } from 'recharts';
 
 const FacultyDashboard = () => {
-  const facultyId = localStorage.getItem('name'); // Assuming 'name' is facultyId
+  const facultyId = localStorage.getItem('name'); 
+  const facultyRole = localStorage.getItem('role');
+
   const [assignedSubjects, setAssignedSubjects] = useState([]);
   const [classTeacherOf, setClassTeacherOf] = useState([]);
   const [courseCoordinatorOf, setCourseCoordinatorOf] = useState([]);
@@ -22,15 +24,14 @@ const FacultyDashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!facultyId) return;
+
       try {
-        // 1️⃣ Fetch faculty's subjects, classTeacherOf, courseCoordinatorOf
         const res1 = await axios.get(`${VITE_API}/faculty/subjects/${facultyId}`);
-        console.log(res1.data);
         setAssignedSubjects(res1.data.subjects || []);
         setClassTeacherOf(res1.data.classTeacherOf || []);
         setCourseCoordinatorOf(res1.data.courseCoordinatorOf || []);
 
-        // 2️⃣ Fetch class performance data (if any)
         const res2 = await axios.get(`${VITE_API}/faculty/performance/${facultyId}`);
         setClassPerformance(res2.data.performance || []);
       } catch (err) {
@@ -40,15 +41,36 @@ const FacultyDashboard = () => {
     fetchData();
   }, [facultyId]);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
+  if (!facultyId || facultyRole !== 'faculty') {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <h2 className="text-xl font-semibold text-red-600">Please log in as faculty to access the dashboard.</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="flex">
       <div className="flex-1 bg-gray-100 p-6 min-h-screen">
-        <h1 className="text-2xl font-bold mb-4 text-purple-700">{facultyId} Dashboard</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold text-purple-700">{facultyId}'s Faculty Dashboard</h1>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+          >
+            Logout
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <ChartCard title="Subjects Assigned">{assignedSubjects.length}</ChartCard>
-          <ChartCard title="Class Teacher Of">{classTeacherOf.join(', ') || "N/A"}</ChartCard>
-          <ChartCard title="Course Coordinator Of">{courseCoordinatorOf.join(', ') || "N/A"}</ChartCard>
+          <ChartCard title="Class Teacher Of">{classTeacherOf.length > 0 ? classTeacherOf.join(', ') : "N/A"}</ChartCard>
+          <ChartCard title="Course Coordinator Of">{courseCoordinatorOf.length > 0 ? courseCoordinatorOf.join(', ') : "N/A"}</ChartCard>
         </div>
 
         <div className="mb-6">
