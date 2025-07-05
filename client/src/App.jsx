@@ -5,6 +5,7 @@ import AuthForm from './components/AuthForm';
 import Login from './components/Login';
 import StudentDashboard from './components/StudentDashboard';
 import FacultyDashboard from './components/FacultyDashboard';
+import AddData from './components/AddData';
 
 function App() {
   const isAuthenticated = localStorage.getItem('token');
@@ -18,6 +19,16 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/auth" element={<AuthForm />} />
             <Route path='/login' element={<Login />} />
+            <Route
+              path="/add-data"
+              element={
+                isAuthenticated && role === 'faculty' ? (
+                  <AddData />
+                ) : (
+                  <Navigate to="/auth" />
+                )
+              }
+            />
 
             <Route
               path="/student-dashboard"

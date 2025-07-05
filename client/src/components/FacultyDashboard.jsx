@@ -10,6 +10,7 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const FacultyDashboard = () => {
   const facultyId = localStorage.getItem('name'); 
@@ -21,6 +22,7 @@ const FacultyDashboard = () => {
   const [classPerformance, setClassPerformance] = useState([]);
 
   const VITE_API = import.meta.env.VITE_API || 'http://localhost:5000';
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,6 +97,15 @@ const FacultyDashboard = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+      </div>
+
+      <div>
+        <button
+        onClick={() => navigate('/add-data')}
+        className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 fixed bottom-4 right-4 shadow-lg"
+      >
+        Add Exam Data
+      </button>
       </div>
     </div>
   );
