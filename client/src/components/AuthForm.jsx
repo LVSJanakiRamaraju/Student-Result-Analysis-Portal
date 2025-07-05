@@ -6,12 +6,8 @@ import { useNavigate } from 'react-router-dom';
 const AuthForm = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState('student');
-  const [mode, setMode] = useState('signup'); 
-  const [form, setForm] = useState({
-    rollNo: '',
-    name: '',
-    password: '',
-  });
+  const [mode, setMode] = useState('signup');
+  const [form, setForm] = useState({ rollNo: '', name: '', password: '' });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -26,29 +22,35 @@ const AuthForm = () => {
     return true;
   };
 
-  const handleSubmit = async (type) => {
+  const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    const VITE_API = import.meta.env.VITE_API;
+    const API = import.meta.env.VITE_API;
     setLoading(true);
 
     try {
-      const endpoint = type === 'login' ? 'login' : 'signup';
-      const res = await axios.post(`${VITE_API}/auth/${endpoint}`, { ...form, role });
+      const endpoint = mode === 'login' ? 'login' : 'signup';
+      const res = await axios.post(`${API}/auth/${endpoint}`, { ...form, role });
 
-      
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('role', res.data.user.role);
-        localStorage.setItem('name', res.data.user.name);
+      if (mode === 'login') {
 
-        if (res.data.user.role === 'student'){
-          localStorage.setItem('userId', res.data.user.rollNo);
+        const { token, user } = res.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('role', user.role);
+        localStorage.setItem('name', user.name);
+
+        if (user.role === 'student') {
+          localStorage.setItem('userId', user.rollNo);
           navigate('/student-dashboard');
+        } else {
+          navigate('/faculty-dashboard');
         }
-        else navigate('/faculty-dashboard');
-      
+      } else {
+        alert('Signup successful! You can now login.');
+        setMode('login');
+      }
     } catch (err) {
-      console.error(err);
+      alert(err.response?.data?.message || 'Something went wrong.');
     } finally {
       setLoading(false);
     }
@@ -56,7 +58,7 @@ const AuthForm = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-tr from-indigo-200 via-purple-200 to-pink-100">
-      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full sm:w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 max-w-md m-6 border transition-transform duration-300 transform hover:scale-105">
+      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md m-6 border transition-transform duration-300 transform hover:scale-105">
         <div className="flex items-center justify-center mb-6 gap-3">
           {role === 'student' ? (
             <FaUserGraduate className="text-blue-600 text-3xl" />
@@ -104,7 +106,6 @@ const AuthForm = () => {
               placeholder="Roll Number"
               value={form.rollNo}
               onChange={handleChange}
-              required={mode === 'signup' || role === 'student'}
             />
           </div>
         )}
@@ -117,7 +118,6 @@ const AuthForm = () => {
             placeholder="Name"
             value={form.name}
             onChange={handleChange}
-            required
           />
         </div>
 
@@ -129,17 +129,17 @@ const AuthForm = () => {
             placeholder="Password"
             value={form.password}
             onChange={handleChange}
-            required
           />
         </div>
 
         <button
           disabled={loading}
-          onClick={() => handleSubmit(mode)}
+          onClick={handleSubmit}
           className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-2 rounded-full shadow hover:opacity-90 active:scale-95 transition"
         >
           {loading ? (mode === 'signup' ? 'Signing Up...' : 'Logging In...') : (mode === 'signup' ? 'Sign Up' : 'Login')}
         </button>
+        <p>If you are facing any problem please reload the page</p>
       </div>
     </div>
   );

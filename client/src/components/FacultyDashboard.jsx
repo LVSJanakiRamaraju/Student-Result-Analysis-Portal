@@ -58,7 +58,7 @@ const FacultyDashboard = () => {
     <div className="flex">
       <div className="flex-1 bg-gray-100 p-6 min-h-screen">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold text-purple-700">{facultyId}'s Faculty Dashboard</h1>
+          <h1 className="text-2xl font-bold text-purple-700">{facultyId}'s Dashboard</h1>
           <button
             onClick={handleLogout}
             className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
