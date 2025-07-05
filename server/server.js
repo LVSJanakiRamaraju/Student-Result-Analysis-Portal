@@ -27,7 +27,6 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/performance', performanceRoutes);
 app.use('/faculty', facultyRoutes);
-app.use('/uploads', express.static('uploads'));
 
 const startServer = async () => {
   try {

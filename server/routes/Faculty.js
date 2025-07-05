@@ -4,17 +4,19 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const ExamData = require('../models/ExamData');
-
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../utils/cloudinary');
 const Faculty = require('../models/Faculty');
 const Performance = require('../models/Performance'); 
 
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'exam_uploads',
+    resource_type: 'raw', 
+    allowed_formats: ['pdf', 'csv', 'xlsx', 'xls'],
+    public_id: (req, file) => Date.now() + '-' + file.originalname,
   },
 });
 
@@ -63,7 +65,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   try {
     const { batch, semester, examDate, examType, branch } = req.body;
 
-    console.log(req.body);
+    //console.log(req.body);
+    if (!req.file || !req.file.path) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
 
     const formattedDate = new Date(`${examDate}-01`).toLocaleDateString('en-US', {
       month: 'long',
@@ -80,10 +85,21 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     });
 
     await examData.save();
-    res.json({ message: 'Exam data uploaded successfully' });
+    res.json({ message: 'Exam data uploaded successfully', data: examData });
   } catch (err) {
-    console.error('Upload error:', err);
+    console.error('Upload error:', err.message);
+    console.error(err.stack)
     res.status(500).json({ message: 'Upload failed' });
+  }
+});
+
+router.get('/uploads', async (req, res) => {
+  try {
+    const data = await ExamData.find().sort({ uploadedAt: -1 });
+    res.json({ data });
+  } catch (err) {
+    console.error('Fetch uploads error:', err);
+    res.status(500).json({ message: 'Failed to fetch uploads' });
   }
 });
 
